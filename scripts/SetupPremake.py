@@ -22,10 +22,7 @@ class PremakeConfiguration:
     @classmethod
     def CheckIfPremakeInstalled(cls):
         premakeExe = Path(f"{cls.premakeDirectory}/premake5.exe");
-        if (not premakeExe.exists()):
-            return cls.InstallPremake()
-
-        return True
+        return cls.InstallPremake() if (not premakeExe.exists()) else True
 
     @classmethod
     def InstallPremake(cls):

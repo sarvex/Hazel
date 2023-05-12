@@ -26,7 +26,7 @@ def DownloadFile(url, filepath):
     path = filepath
     filepath = os.path.abspath(filepath)
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
-            
+
     if (type(url) is list):
         for url_option in url:
             print("Downloading", url_option)
@@ -36,17 +36,14 @@ def DownloadFile(url, filepath):
             except urllib.error.URLError as e:
                 print(f"URL Error encountered: {e.reason}. Proceeding with backup...\n\n")
                 os.remove(filepath)
-                pass
             except urllib.error.HTTPError as e:
                 print(f"HTTP Error  encountered: {e.code}. Proceeding with backup...\n\n")
                 os.remove(filepath)
-                pass
             except:
                 print(f"Something went wrong. Proceeding with backup...\n\n")
                 os.remove(filepath)
-                pass
         raise ValueError(f"Failed to download {filepath}")
-    if not(type(url) is str):
+    if type(url) is not str:
         raise TypeError("Argument 'url' must be of type list or string")
 
     with open(filepath, 'wb') as f:
@@ -60,10 +57,10 @@ def DownloadFile(url, filepath):
             downloaded = 0
             total = int(total)
             startTime = time.time()
-            for data in response.iter_content(chunk_size=max(int(total/1000), 1024*1024)):
+            for data in response.iter_content(chunk_size=max(total // 1000, 1024*1024)):
                 downloaded += len(data)
                 f.write(data)
-                
+
                 try:
                     done = int(50*downloaded/total) if downloaded < total else 50
                     percentage = (downloaded / total) * 100 if downloaded < total else 100
@@ -88,7 +85,7 @@ def UnzipFile(filepath, deleteZipFile=True):
     zipFilePath = os.path.abspath(filepath) # get full path of files
     zipFileLocation = os.path.dirname(zipFilePath)
 
-    zipFileContent = dict()
+    zipFileContent = {}
     zipFileContentSize = 0
     with ZipFile(zipFilePath, 'r') as zipFileFolder:
         for name in zipFileFolder.namelist():
